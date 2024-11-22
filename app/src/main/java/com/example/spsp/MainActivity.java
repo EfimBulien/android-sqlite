@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,9 +21,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadBooks();
-        Log.d("LoadBooks", "Количество книг: " + bookArrayList.size());
     }
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,7 +39,9 @@ public class MainActivity extends AppCompatActivity {
 
 
         Button addButton = findViewById(R.id.add_button);
-        addButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AddBookActivity.class)));
+        addButton.setOnClickListener(v -> startActivity(
+                new Intent(MainActivity.this, AddBookActivity.class)
+        ));
         loadBooks();
     }
 
@@ -57,10 +56,10 @@ public class MainActivity extends AppCompatActivity {
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHelper.COLUMN_NAME));
                 String author = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHelper.COLUMN_AUTHOR));
                 bookArrayList.add(new Book(id, author, name));
-            } while (cursor.moveToNext()); // Переход к следующей записи
+            } while (cursor.moveToNext());
         }
 
-        cursor.close(); // Закрытие курсора
-        recyclerViewAdapter.notifyDataSetChanged(); // Уведомление адаптера об изменениях
+        cursor.close();
+        recyclerViewAdapter.notifyDataSetChanged();
     }
 }

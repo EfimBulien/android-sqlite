@@ -5,8 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
-
 import androidx.annotation.Nullable;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
@@ -45,23 +43,51 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         values.put(COLUMN_AUTHOR, bookAuthor);
 
         long result = db.insert(TABLE_NAME, null, values);
-        if (result == -1) {
-            Log.e("Database Error", "Failed to insert values: " + values);
-        }
+
         db.close();
         return result;
     }
 
-    public int deleteBookById(long bookId) {
+    public void deleteBookById(long bookId) {
         SQLiteDatabase db = this.getWritableDatabase();
-        int result = db.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[]{String.valueOf(bookId)});
+        db.delete(TABLE_NAME, COLUMN_ID + " = ?", new String[]{String.valueOf(bookId)});
         db.close();
-        return result;
     }
 
     public Cursor getAllBooks() {
         SQLiteDatabase db = this.getReadableDatabase();
-        return db.query(TABLE_NAME, null, null,null, null,null, null);
+        return db.query(TABLE_NAME, null,
+                null, null, null, null, null);
     }
-    
+
+    public Book getBookById(int id) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.query(TABLE_NAME, new String[]{COLUMN_ID, COLUMN_NAME, COLUMN_AUTHOR},
+                COLUMN_ID + " = ?",
+                new String[]{String.valueOf(id)}, null, null, null);
+
+        if (cursor != null && cursor.moveToFirst()) {
+            int bookId = cursor.getInt(cursor.getColumnIndexOrThrow(COLUMN_ID));
+            String bookName = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_NAME));
+            String bookAuthor = cursor.getString(cursor.getColumnIndexOrThrow(COLUMN_AUTHOR));
+            cursor.close();
+            return new Book(bookId, bookAuthor, bookName);
+        }
+
+        if (cursor != null) {
+            cursor.close();
+        }
+        return null;
+    }
+
+    public void updateBook(int bookId, String newName, String newAuthor) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(COLUMN_NAME, newName);
+        values.put(COLUMN_AUTHOR, newAuthor);
+
+        db.update(TABLE_NAME, values, COLUMN_ID + " = ?",
+                new String[]{String.valueOf(bookId)});
+        db.close();
+    }
 }

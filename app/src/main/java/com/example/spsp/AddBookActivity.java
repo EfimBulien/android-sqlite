@@ -2,7 +2,6 @@ package com.example.spsp;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -38,12 +37,10 @@ public class AddBookActivity extends AppCompatActivity {
         long result = dataBaseHelper.addBook(bookName, bookAuthor);
 
         if (result > 0) {
-            Log.d("AddBook", "Книга добавлена: " + bookName + " автор: " + bookAuthor);
             Toast.makeText(this, "Книга добавлена", Toast.LENGTH_SHORT).show();
             startActivity(new Intent(AddBookActivity.this, MainActivity.class));
             finish();
         } else {
-            Log.e("Database Error", "Failed to add book: " + bookName + " by " + bookAuthor);
             Toast.makeText(this, "Ошибка добавления книги", Toast.LENGTH_SHORT).show();
         }
     }

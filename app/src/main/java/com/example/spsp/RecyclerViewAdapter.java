@@ -1,7 +1,7 @@
 package com.example.spsp;
 
-
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
 
     private final Context context;
-    private ArrayList<Book> books;
+    private final ArrayList<Book> books;
 
     public RecyclerViewAdapter(Context context, ArrayList<Book> books) {
         this.context = context;
@@ -25,15 +25,21 @@ public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapte
     @NonNull
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.book_card, parent, false);
+        View view = LayoutInflater.from(context)
+                .inflate(R.layout.book_card, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
-        Book book  = books.get(position);
+    public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
+        Book book = books.get(position);
         holder.bookName.setText(book.getBook_Name());
         holder.bookAuthor.setText(book.getBook_Author());
+        holder.itemView.setOnClickListener(v -> {
+            Intent intent = new Intent(context, BookDetailActivity.class);
+            intent.putExtra("book_id", book.getId_Book());
+            context.startActivity(intent);
+        });
     }
 
     @Override
