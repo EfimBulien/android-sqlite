@@ -4,13 +4,12 @@ import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Button;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
@@ -23,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         loadBooks();
+        Log.d("LoadBooks", "Количество книг: " + bookArrayList.size());
     }
 
 
@@ -40,10 +40,9 @@ public class MainActivity extends AppCompatActivity {
         recyclerViewAdapter = new RecyclerViewAdapter(this, bookArrayList);
         recyclerView.setAdapter(recyclerViewAdapter);
 
-        @SuppressLint("WrongViewCast")
-        FloatingActionButton floatingActionButton = findViewById(R.id.add_button);
-        floatingActionButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AddBookActivity.class)));
-        
+
+        Button addButton = findViewById(R.id.add_button);
+        addButton.setOnClickListener(v -> startActivity(new Intent(MainActivity.this, AddBookActivity.class)));
         loadBooks();
     }
 
@@ -52,16 +51,16 @@ public class MainActivity extends AppCompatActivity {
         bookArrayList.clear();
         Cursor cursor = dataBaseHelper.getAllBooks();
 
-        if (cursor.moveToLast()){
+        if (cursor.moveToFirst()) {
             do {
                 int id = cursor.getInt(cursor.getColumnIndexOrThrow(DataBaseHelper.COLUMN_ID));
                 String name = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHelper.COLUMN_NAME));
-                String author  = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHelper.COLUMN_AUTHOR));
+                String author = cursor.getString(cursor.getColumnIndexOrThrow(DataBaseHelper.COLUMN_AUTHOR));
                 bookArrayList.add(new Book(id, author, name));
-            } while (cursor.moveToNext());
+            } while (cursor.moveToNext()); // Переход к следующей записи
         }
 
-        cursor.close();
-        recyclerViewAdapter.notifyDataSetChanged();
+        cursor.close(); // Закрытие курсора
+        recyclerViewAdapter.notifyDataSetChanged(); // Уведомление адаптера об изменениях
     }
 }

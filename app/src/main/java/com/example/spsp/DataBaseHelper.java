@@ -5,13 +5,14 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
 public class DataBaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "book_db";
-    private static final int SCHEMA = 1;
+    private static final int SCHEMA = 2;
 
     static final String TABLE_NAME = "books";
 
@@ -25,13 +26,14 @@ public class DataBaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "(" + COLUMN_ID +
-                " INTEGER PRIMARY KEY AUTOINCREMENT," + COLUMN_NAME + "TEXT" +
-                COLUMN_AUTHOR + "INTEGER);");
+        sqLiteDatabase.execSQL("CREATE TABLE " + TABLE_NAME + "(" +
+                COLUMN_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                COLUMN_NAME + " TEXT, " +
+                COLUMN_AUTHOR + " TEXT);");
     }
 
     @Override
-    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {
+    public void onUpgrade(SQLiteDatabase sqLiteDatabase, int oldVersion, int newVersion) {
         sqLiteDatabase.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
         onCreate(sqLiteDatabase);
     }
@@ -41,7 +43,11 @@ public class DataBaseHelper extends SQLiteOpenHelper {
         ContentValues values = new ContentValues();
         values.put(COLUMN_NAME, bookName);
         values.put(COLUMN_AUTHOR, bookAuthor);
+
         long result = db.insert(TABLE_NAME, null, values);
+        if (result == -1) {
+            Log.e("Database Error", "Failed to insert values: " + values);
+        }
         db.close();
         return result;
     }
