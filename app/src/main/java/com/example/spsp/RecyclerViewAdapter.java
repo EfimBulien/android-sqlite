@@ -1,4 +1,5 @@
-package com.example.a08112024;
+package com.example.spsp;
+
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -12,41 +13,42 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.util.ArrayList;
 
 public class RecyclerViewAdapter extends RecyclerView.Adapter<RecyclerViewAdapter.ViewHolder> {
-    private Context context;
-    private ArrayList<Book> bookArrayList;
 
-    public RecyclerViewAdapter(Context context, ArrayList<Book> bookArrayList){
-        this.context=context;
-        this.bookArrayList=bookArrayList;
+    private final Context context;
+    private ArrayList<Book> books;
+
+    public RecyclerViewAdapter(Context context, ArrayList<Book> books) {
+        this.context = context;
+        this.books = books;
     }
 
     @NonNull
     @Override
     public RecyclerViewAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(context).inflate(R.layout.book_card,parent, false);
+        View view = LayoutInflater.from(context).inflate(R.layout.book_card, parent, false);
         return new ViewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerViewAdapter.ViewHolder holder, int position) {
-    Book book = bookArrayList.get(position);
-
-    holder.bookName.setText(book.getBook_Name());
-    holder.bookAuthor.setText(book.getBook_Author());
+        Book book  = books.get(position);
+        holder.bookName.setText(book.getBook_Name());
+        holder.bookAuthor.setText(book.getBook_Author());
     }
 
     @Override
     public int getItemCount() {
-        return bookArrayList.size();
+        return books.size();
     }
 
-    public class ViewHolder extends RecyclerView.ViewHolder {
+    public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView bookName;
         TextView bookAuthor;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
-            bookName=itemView.findViewById(R.id.b_name);
-            bookAuthor=itemView.findViewById(R.id.b_author);
+            bookName = itemView.findViewById(R.id.name);
+            bookAuthor = itemView.findViewById(R.id.author);
         }
     }
 }

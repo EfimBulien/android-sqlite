@@ -3,11 +3,11 @@ plugins {
 }
 
 android {
-    namespace 'com.example.a08112024'
+    namespace 'com.example.spsp'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.example.a08112024"
+        applicationId "com.example.spsp"
         minSdk 29
         targetSdk 34
         versionCode 1
@@ -19,7 +19,8 @@ android {
     buildTypes {
         release {
             minifyEnabled false
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'),
+                    'proguard-rules.pro'
         }
     }
     compileOptions {
